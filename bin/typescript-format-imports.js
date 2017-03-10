@@ -14,7 +14,15 @@ const filename = process.argv[2];
 const originalContent = fs.readFileSync(filename).toString();
 const originalLines = originalContent.split('\n');
 
-const lines = formatImports(originalLines);
+let lines = null;
+
+try {
+  lines = formatImports(originalLines);
+} catch (e) {
+  console.log(filename + ': ' + e);
+  process.exit(1);
+}
+
 const newContent = lines.join('\n');
 
 if (newContent !== originalContent) {
