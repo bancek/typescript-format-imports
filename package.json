@@ -7,8 +7,8 @@
   "module": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "nyc --include lib/**/*.ts --extension .ts --require ts-node/register mocha test/**/*.spec.ts && shx rm -rf ./coverage",
-    "test:watch": "mocha -w --compilers ts:ts-node/register test/**/*.spec.ts",
+    "test": "nyc --include lib/**/*.ts --extension .ts --require ts-node/register --require ./test/es-helper mocha test/**/*.spec.ts && shx rm -rf ./coverage",
+    "test:watch": "mocha -w --compilers ts:ts-node/register,js:./test/es-helper test/**/*.spec.ts",
     "build": "rimraf dist && tsc -p tsconfig-esm.json && rollup -c rollup.config.js dist/index.js > dist/typescript-format-imports.bundle.js && cp package.json dist && ts-node tools/cleanup.ts && mkdir dist/bin && cp bin/typescript-format-imports.js dist/bin && cp README.md dist",
     "lint": "tslint -c tslint.json lib/**/*.ts test/**/*.ts",
     "commit": "git-cz"
@@ -34,6 +34,9 @@
     "@types/chai": "^3.4.35",
     "@types/mocha": "^2.2.39",
     "@types/node": "^7.0.5",
+    "babel-plugin-istanbul": "^4.0.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-register": "^6.23.0",
     "chai": "^3.5.0",
     "commitizen": "^2.9.6",
     "cz-conventional-changelog": "^2.0.0",
