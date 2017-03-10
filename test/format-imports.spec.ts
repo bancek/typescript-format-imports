@@ -19,6 +19,9 @@ require('./style.scss');
 
 import { join as pathJoin } from 'path';
 
+import './fix';
+import * as sortBy from 'lodash/sortBy';
+
 export const lorem = 'ipsum';
 
 
@@ -28,6 +31,7 @@ export const dolor = 'sit';
 const output1 = `'use strict';
 
 import { writeFileSync } from 'fs';
+import * as sortBy from 'lodash/sortBy';
 import { join as pathJoin } from 'path';
 
 import baz from '../../c';
@@ -36,6 +40,7 @@ import * as b from '../b';
 
 import { bar } from './a';
 import { foo } from './b';
+import './fix';
 import {
     one,
     two,
@@ -55,7 +60,19 @@ describe('# formatImports', () => {
     expect(formatImports(input1.split('\n'))).to.deep.equal(output1.split('\n'));
   });
 
+  it('should ignore format imports', () => {
+    expect(formatImports([
+      `// typescript-format-imports:ignore`,
+      `import './b'`,
+      `import './a'`,
+    ])).to.deep.equal([
+      `// typescript-format-imports:ignore`,
+      `import './b'`,
+      `import './a'`,
+    ]);
+  });
+
   it('throw an error', () => {
-    expect(() => formatImports(["import 'fs';"])).to.throw();
+    expect(() => formatImports(["import module 'fs';"])).to.throw();
   });
 });
