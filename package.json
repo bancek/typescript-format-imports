@@ -1,6 +1,6 @@
 {
   "name": "typescript-format-imports",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "TypeScript format imports",
   "main": "typescript-format-imports.bundle.js",
   "jsnext:main": "index.js",
