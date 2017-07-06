@@ -31,11 +31,11 @@ export function pathKey(path: string, internalModules: Set<string>): string {
   } else if (path === '..') {
     return leftPad(2, 5);
   } else if (/\.\.\//.test(path)) {
-    return leftPad(1 + path.split('/').filter((x) => x === '..').length, 5);
+    return leftPad(1 + path.split('/').filter(x => x === '..').length, 5);
   } else {
     let key = '10000';
 
-    internalModules.forEach(module => {
+    internalModules.forEach((module) => {
       if (path.indexOf(module) === 0) {
         key = '01000' + module;
       }
@@ -94,22 +94,22 @@ export function formatImports(originalLines: string[], options?: FormatImportsOp
     return originalLines;
   }
 
-  imports = imports.map((text) => text.replace(/"/g, `'`));
+  imports = imports.map(text => text.replace(/"/g, `'`));
 
-  const groupedImports = groupBy(imports, (text) => pathKey(importPath(text), internalModules));
+  const groupedImports = groupBy(imports, text => pathKey(importPath(text), internalModules));
   const groupedImportsPairs = toPairs(groupedImports)
-    .map((x) => [parseInt(x[0], 10), x[1]] as [number, string[]]);
+    .map(x => [parseInt(x[0], 10), x[1]] as [number, string[]]);
 
   const sortedGroups = reverse(
-    sortBy(groupedImportsPairs, (x) => x[0]),
-  ) as Array<[number, string[]]>;
+    sortBy(groupedImportsPairs, x => x[0]),
+  ) as [number, string[]][];
 
   const importLines: string[] = [];
 
   sortedGroups.forEach((x) => {
-    sortBy(x[1], (text) => importPath(text))
+    sortBy(x[1], text => importPath(text))
       .forEach((text) => {
-        text.split('\n').forEach((line) => importLines.push(line));
+        text.split('\n').forEach(line => importLines.push(line));
       });
     importLines.push('');
   });

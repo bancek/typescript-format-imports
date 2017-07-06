@@ -90,6 +90,6 @@ describe('# formatImports', () => {
   });
 
   it('throw an error', () => {
-    expect(() => formatImports(["import module 'fs';"])).to.throw();
+    expect(() => formatImports(['import module \'fs\';'])).to.throw();
   });
 });
