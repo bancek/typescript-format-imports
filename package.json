@@ -8,7 +8,7 @@
   "types": "index.d.ts",
   "scripts": {
     "test": "nyc --include lib/**/*.ts --extension .ts --require ts-node/register --require ./test/es-helper mocha test/**/*.spec.ts && shx rm -rf ./coverage",
-    "test:watch": "mocha -w --compilers ts:ts-node/register,js:./test/es-helper test/**/*.spec.ts",
+    "test:watch": "mocha -w --watch-extensions ts --compilers ts:ts-node/register,js:./test/es-helper test/**/*.spec.ts",
     "build": "rimraf dist && tsc -p tsconfig-esm.json && rollup -c rollup.config.js dist/index.js > dist/typescript-format-imports.bundle.js && cp package.json dist && ts-node tools/cleanup.ts && mkdir dist/bin && cp bin/typescript-format-imports.js dist/bin && cp README.md dist",
     "lint": "tslint -c tslint.json lib/**/*.ts test/**/*.ts",
     "commit": "git-cz"
@@ -48,6 +48,7 @@
     "shx": "^0.2.2",
     "ts-node": "^2.1.0",
     "tslint": "^4.4.2",
+    "tslint-config-airbnb": "^5.2.1",
     "typescript": "^2.1.6"
   },
   "config": {
@@ -57,6 +58,7 @@
   },
   "dependencies": {
     "@types/lodash-es": "^4.14.4",
-    "lodash-es": "^4.17.4"
+    "lodash-es": "^4.17.4",
+    "read-pkg-up": "^2.0.0"
   }
 }

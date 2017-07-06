@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { formatImports } from '../lib';
+import { formatImports, FormatImportsOptions } from '../lib';
 
 const input1 = `'use strict';
 
@@ -15,12 +15,19 @@ import {
     three
 } from './four';
 
+import * as d from '..';
+
 require('./style.scss');
 
 import { join as pathJoin } from 'path';
 
 import './fix';
 import * as sortBy from 'lodash/sortBy';
+
+import * as helpers from 'ui/helpers';
+
+import * as utils from 'common/utils';
+import * as immutable from 'common/immutable';
 
 export const lorem = 'ipsum';
 
@@ -34,8 +41,14 @@ import { writeFileSync } from 'fs';
 import * as sortBy from 'lodash/sortBy';
 import { join as pathJoin } from 'path';
 
+import * as immutable from 'common/immutable';
+import * as utils from 'common/utils';
+
+import * as helpers from 'ui/helpers';
+
 import baz from '../../c';
 
+import * as d from '..';
 import * as b from '../b';
 
 import { bar } from './a';
@@ -57,7 +70,11 @@ export const dolor = 'sit';
 
 describe('# formatImports', () => {
   it('should format imports', () => {
-    expect(formatImports(input1.split('\n'))).to.deep.equal(output1.split('\n'));
+    const options: FormatImportsOptions = {
+      internalModules: new Set(['common', 'ui']),
+    };
+
+    expect(formatImports(input1.split('\n'), options)).to.deep.equal(output1.split('\n'));
   });
 
   it('should ignore format imports', () => {

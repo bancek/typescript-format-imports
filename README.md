@@ -5,6 +5,23 @@
 
 TypeScript format imports
 
+# Settings
+
+Add `tsFormatImports` to your `package.json`.
+
+```
+{
+  ...
+  "tsFormatImports": {
+    "internalModules": [
+      "common",
+      "ui"
+    ]
+  },
+  ...
+}
+```
+
 # Commands list
 ````
 yarn test           // run test(mocha) and coverage report(nyc)

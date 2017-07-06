@@ -3,6 +3,10 @@ import reverse from 'lodash-es/reverse';
 import sortBy from 'lodash-es/sortBy';
 import toPairs from 'lodash-es/toPairs';
 
+export interface FormatImportsOptions {
+  internalModules?: Set<string>;
+}
+
 export function importPath(text: string): string {
   let match = text.match(/from '(.*)'/);
 
@@ -17,17 +21,34 @@ export function importPath(text: string): string {
   }
 }
 
-export function pathDepth(path: string): number {
-  if (path.startsWith('./')) {
-    return 1;
+function leftPad(num: number, size: number) {
+  return ('000000000' + num).substr(-size);
+}
+
+export function pathKey(path: string, internalModules: Set<string>): string {
+  if (path.startsWith('./') || path === '.') {
+    return leftPad(1, 5);
+  } else if (path === '..') {
+    return leftPad(2, 5);
   } else if (/\.\.\//.test(path)) {
-    return 1 + path.split('/').filter((x) => x === '..').length;
+    return leftPad(1 + path.split('/').filter((x) => x === '..').length, 5);
   } else {
-    return 0;
+    let key = '10000';
+
+    internalModules.forEach(module => {
+      if (path.indexOf(module) === 0) {
+        key = '01000' + module;
+      }
+    });
+
+    return key;
   }
 }
 
-export function formatImports(originalLines: string[]): string[] {
+export function formatImports(originalLines: string[], options?: FormatImportsOptions): string[] {
+  const internalModules = options != null && options.internalModules != null ?
+    options.internalModules : new Set<string>();
+
   let imports: string[] = [];
 
   const beforeLines: string[] = [];
@@ -36,19 +57,19 @@ export function formatImports(originalLines: string[]): string[] {
   let ignore = false;
   let wasImport = false;
   let isBeforeImports = true;
-  let multiLineImport: string[] | null = null;
+  let multiLineImport: string[] | undefined;
 
   originalLines.forEach((text) => {
     if (/^\/\/ typescript-format-imports:ignore/.test(text)) {
       ignore = true;
     }
 
-    if (multiLineImport != null) {
+    if (multiLineImport !== undefined) {
       multiLineImport.push(text);
 
       if (/}/.test(text)) {
         imports.push(multiLineImport.join('\n'));
-        multiLineImport = null;
+        multiLineImport = undefined;
       }
     } else if (/^import /.test(text)) {
       if (/{/.test(text) && !/}/.test(text)) {
@@ -75,12 +96,12 @@ export function formatImports(originalLines: string[]): string[] {
 
   imports = imports.map((text) => text.replace(/"/g, `'`));
 
-  const groupedImports = groupBy(imports, (text) => pathDepth(importPath(text)));
+  const groupedImports = groupBy(imports, (text) => pathKey(importPath(text), internalModules));
   const groupedImportsPairs = toPairs(groupedImports)
     .map((x) => [parseInt(x[0], 10), x[1]] as [number, string[]]);
 
   const sortedGroups = reverse(
-    sortBy(groupedImportsPairs, (x) => x[0] === 0 ? Infinity : x[0]),
+    sortBy(groupedImportsPairs, (x) => x[0]),
   ) as Array<[number, string[]]>;
 
   const importLines: string[] = [];
