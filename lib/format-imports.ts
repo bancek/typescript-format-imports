@@ -1,5 +1,4 @@
 import groupBy from 'lodash-es/groupBy';
-import reverse from 'lodash-es/reverse';
 import sortBy from 'lodash-es/sortBy';
 import toPairs from 'lodash-es/toPairs';
 
@@ -27,13 +26,13 @@ function leftPad(num: number, size: number) {
 
 export function pathKey(path: string, internalModules: Set<string>): string {
   if (path.startsWith('./') || path === '.') {
-    return leftPad(1, 5);
+    return '10000';
   } else if (path === '..') {
-    return leftPad(2, 5);
+    return '09999';
   } else if (/\.\.\//.test(path)) {
-    return leftPad(1 + path.split('/').filter(x => x === '..').length, 5);
+    return leftPad(10000 - path.split('/').filter(x => x === '..').length, 5);
   } else {
-    let key = '10000';
+    let key = '00100';
 
     internalModules.forEach((module) => {
       if (path.indexOf(module) === 0) {
@@ -98,11 +97,9 @@ export function formatImports(originalLines: string[], options?: FormatImportsOp
 
   const groupedImports = groupBy(imports, text => pathKey(importPath(text), internalModules));
   const groupedImportsPairs = toPairs(groupedImports)
-    .map(x => [parseInt(x[0], 10), x[1]] as [number, string[]]);
+    .map(x => [x[0], x[1]] as [string, string[]]);
 
-  const sortedGroups = reverse(
-    sortBy(groupedImportsPairs, x => x[0]),
-  ) as [number, string[]][];
+  const sortedGroups = sortBy(groupedImportsPairs, x => x[0]);
 
   const importLines: string[] = [];
 

@@ -74,7 +74,13 @@ describe('# formatImports', () => {
       internalModules: new Set(['common', 'ui']),
     };
 
-    expect(formatImports(input1.split('\n'), options)).to.deep.equal(output1.split('\n'));
+    const output = formatImports(input1.split('\n'), options);
+
+    expect(output).to.deep.equal(output1.split('\n'));
+
+    const outputAgain = formatImports(output, options);
+
+    expect(outputAgain).to.deep.equal(output1.split('\n'));
   });
 
   it('should ignore format imports', () => {
