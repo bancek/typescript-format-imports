@@ -23,6 +23,7 @@ import { join as pathJoin } from 'path';
 
 import './fix';
 import * as sortBy from 'lodash/sortBy';
+import isString = require('lodash/isString');
 
 import * as helpers from 'ui/helpers';
 
@@ -38,6 +39,7 @@ export const dolor = 'sit';
 const output1 = `'use strict';
 
 import { writeFileSync } from 'fs';
+import isString = require('lodash/isString');
 import * as sortBy from 'lodash/sortBy';
 import { join as pathJoin } from 'path';
 

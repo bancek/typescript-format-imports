@@ -14,6 +14,10 @@ export function importPath(text: string): string {
   }
 
   if (match == null) {
+    match = text.match(/import .* = require\('(.*)'\)/);
+  }
+
+  if (match == null) {
     throw new Error(`typescript-format-imports: invalid import ${text}`);
   } else {
     return match[1];
