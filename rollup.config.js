@@ -1,8 +1,11 @@
 const nodeResolve = require('rollup-plugin-node-resolve');
 
 export default {
-  format: 'umd',
-  moduleName: 'typescript-format-imports',
+  input: 'dist/index.js',
+  output: {
+    format: 'umd',
+    name: 'typescript-format-imports'
+  },
   plugins: [
     nodeResolve(),
   ],
