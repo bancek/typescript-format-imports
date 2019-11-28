@@ -15,16 +15,17 @@ const filename = process.argv[2];
 const parentPath = path.resolve(path.join(filename, '..'));
 
 const package = readPkgUp.sync({ cwd: parentPath });
+const pkg = package.pkg || package.package || package.packageJson;
 
 const options = {};
 
 if (
-  package.pkg != null &&
-  package.pkg.tsFormatImports != null &&
-  package.pkg.tsFormatImports.internalModules != null &&
-  package.pkg.tsFormatImports.internalModules.length > 0
+  pkg != null &&
+  pkg.tsFormatImports != null &&
+  pkg.tsFormatImports.internalModules != null &&
+  pkg.tsFormatImports.internalModules.length > 0
 ) {
-  options.internalModules = new Set(package.pkg.tsFormatImports.internalModules);
+  options.internalModules = new Set(pkg.tsFormatImports.internalModules);
 }
 
 const originalContent = fs.readFileSync(filename).toString();
