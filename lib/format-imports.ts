@@ -30,7 +30,11 @@ function leftPad(num: number, size: number) {
 
 export function pathKey(path: string, internalModules: Set<string>): string {
   if (path.startsWith('./') || path === '.') {
-    return '10000';
+    if (/\.(css|scss|sass)$/.test(path)) {
+      return '10010';
+    } else {
+      return '10000';
+    }
   } else if (path === '..') {
     return '09999';
   } else if (/\.\.\//.test(path)) {

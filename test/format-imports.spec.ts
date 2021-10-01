@@ -17,6 +17,10 @@ import {
 
 import * as d from '..';
 
+import './style-c.css';
+import './style-a.scss';
+import './style-b.sass';
+
 require('./style.scss');
 
 import { join as pathJoin } from 'path';
@@ -61,6 +65,10 @@ import {
     two,
     three
 } from './four';
+
+import './style-a.scss';
+import './style-b.sass';
+import './style-c.css';
 
 require('./style.scss');
 
